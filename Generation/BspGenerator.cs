@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;   // necessario para List<T>
 
 namespace PCG.Generation
 {
@@ -103,9 +104,30 @@ namespace PCG.Generation
                 min = minRoomSize;
 
             if (max > length - minRoomSize)
-                max = length - minRoomSize
+                max = length - minRoomSize;
 
             return random.Next(min, max + 1); // +1 pq o topo é exclusivo
+        }
+        
+        // percorre aa arvore e devolve só as folhas (comodo)
+        public static List<BspNode> CollectLeaves(BspNode node)
+        {
+            List<BspNode> leaves = new List<BspNode>();
+            Collect(node, leaves);
+            return leaves;
+        }
+
+        // visita o nó, se tiver filhos desce nos dois 
+        private static void Collect(BspNode node, List<BspNode> leaves)
+        {
+            if (node.IsLeaf)
+            {
+                leaves.Add(node);
+                return;
+            }
+
+            Collect(node.Left, leaves);
+            Collect(node.Right, leaves);
         }
     }
 }
