@@ -6,8 +6,8 @@ class Program
 {
     static void Main()
     {
-        int largura = 60;
-        int altura = 30;
+        int largura = 40;
+        int altura = 24;
         int seed = 42;
 
         //minroomsize = 6, maxdepth=4 (ate 16 comodos)
@@ -27,15 +27,17 @@ class Program
     {
         char[,] grade = new char[altura, largura];
 
-        //preenche td com espaço
         for (int y = 0; y < altura; y++)
             for (int x = 0; x < largura; x++)
                 grade[y, x] = ' ';
 
-        // desenha cada cômodo: '#" na borda, '.' no interior
-        foreach (BspNode comodo in comodos)
+        // Cada cômodo ganha um caractere próprio pra ficar identificável.
+        const string simbolos = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+        for (int i = 0; i < comodos.Count; i++)
         {
-            Area a = comodo.Area;
+            Area a = comodos[i].Area;
+            char id = simbolos[i % simbolos.Length];
 
             for (int y = a.Y; y < a.Bottom; y++)
             {
@@ -44,17 +46,19 @@ class Program
                     bool naBorda = (x == a.X || x == a.Right - 1 ||
                                     y == a.Y || y == a.Bottom - 1);
 
-                    grade[y, x] = naBorda ? '#' : '.';
+                    grade[y, x] = naBorda ? '#' : id;
                 }
             }
         }
 
-        // imprimir linha por linha
+        // Imprime cada célula 2x na horizontal pra compensar o formato do caractere.
         for (int y = 0; y < altura; y++)
         {
             for (int x = 0; x < largura; x++)
+            {
                 Console.Write(grade[y, x]);
-
+                Console.Write(grade[y, x]);
+            }
             Console.WriteLine();
         }
     }
